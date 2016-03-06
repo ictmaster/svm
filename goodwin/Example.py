@@ -18,7 +18,7 @@ testing_1 = [i[:-1] for i in testing if i[-1]==1]
 #Mapping to 2d --- for plot purposes
 
 def mapTo2D(data):
-    retval = [] 
+    retval = []
     for i in range(0,len(data),2):
        x = data[i]
        y = data[i+1]
@@ -35,6 +35,7 @@ for d in training_0:
 for d in training_1:
     training_2d_1 += mapTo2D(d)
 
+
 #Plotting 2d
 plt.subplot(2,2,1)
 plt.plot([i[0] for i in training_2d_0],[i[1] for i in training_2d_0], "-o", color="green")
@@ -48,7 +49,7 @@ plt.plot([i[0] for i in training_2d_0][:8],[i[1] for i in training_2d_0][:8], "-
 
 plt.subplot(2,2,4)
 plt.plot([i[0] for i in training_2d_1][:8],[i[1] for i in training_2d_1][:8], "-o", color="green")
-plt.show()
+#plt.show()
 
 #2d classification
 X = np.array(training_2d_0[:8]+training_2d_1[:8])
@@ -80,7 +81,7 @@ plotSVM(svm_linear,1,"Linear")
 plotSVM(svm_rbf,2,"RBF")
 plotSVM(svm_sigmoid,3,"Sigmoid")
 
-plt.show()
+#plt.show()
 
 #Testing 2d
 
@@ -125,13 +126,14 @@ testSVM(svm_sigmoid,testing_2d_0,testing_2d_1)
 X = np.array(training_0+training_1)
 Y = np.array([0 for i in training_0] + [1 for i in training_1])
 
+import pdb;pdb.set_trace()
 
 svm_linear = svm.SVC(kernel='linear',C=C,gamma=gamma).fit(X,Y)
 svm_poly = svm.SVC(kernel='poly',C=C,gamma=gamma).fit(X,Y)
 svm_rbf = svm.SVC(kernel='rbf',C=C,gamma=gamma).fit(X,Y)
 svm_sigmoid = svm.SVC(kernel='sigmoid',C=C,gamma=gamma).fit(X,Y)
 
-
+print "\n"
 
 print "Testing 8d"
 
@@ -146,4 +148,3 @@ testSVM(svm_sigmoid,testing_0,testing_1)
 
 print "Poly"
 testSVM(svm_poly,testing_0,testing_1)
-

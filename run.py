@@ -8,6 +8,12 @@ from sklearn import svm
 import warnings
 warnings.simplefilter("ignore")
 
+
+def test_svm(svm, classes):
+    num_correct = 0
+    num_wrong = 0
+    for correct, testing in 
+
 if __name__ == '__main__':
     script_start_time = time.time()
 
@@ -41,6 +47,16 @@ if __name__ == '__main__':
     gamma = 0.5
 
     svm_linear = svm.SVC(kernel='linear',C=C,gamma=gamma).fit(X,Y)
+    #svm_polynomial = svm.SVC(kernel='poly',C=C,gamma=gamma).fit(X,Y)
+    svm_rbf = svm.SVC(kernel='rbf',C=C,gamma=gamma).fit(X,Y)
+    svm_sigmoid = svm.SVC(kernel='sigmoid',C=C,gamma=gamma).fit(X,Y)
+    h = 0.2 #Mesh step
+    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                         np.arange(y_min, y_max, h))
+
+
 
     import pdb;pdb.set_trace()
 
