@@ -1,10 +1,12 @@
 #!/usr/bin/python
+from __future__ import print_function
 import time
 import sys
 import numpy as np
 import random
 from sklearn import svm, grid_search
 import threading
+
 
 import warnings
 warnings.simplefilter("ignore")
