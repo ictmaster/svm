@@ -4,12 +4,13 @@ import sys
 import numpy as np
 import random
 from sklearn import svm
+import threading
 
 import warnings
 warnings.simplefilter("ignore")
 
 # Function for testing svm
-def test_svm(svm, testing_dict):
+def test_svm(svm, testing_dict, name):
     num_correct = 0
     num_wrong = 0
     for correct, testing in testing_dict.iteritems():
@@ -19,11 +20,17 @@ def test_svm(svm, testing_dict):
                 num_correct += 1
             else:
                 num_wrong += 1
-
-    print("\tCorrect:{0}".format(num_correct))
-    print("\tWrong:{0}".format(num_wrong))
+    print("\n{1} - Correct:{0}".format(num_correct, name)),
+    print("\n{1} - Wrong:{0}".format(num_wrong, name)),
     accuracy = float(num_correct)/(num_correct+num_wrong)*100
-    print("\tAccuracy:{0:.2f}%".format(round(accuracy,2)))
+    print("\n{1} - Accuracy:{0:.2f}%".format(round(accuracy,2), name)),
+
+def train_svm(kernel, X,Y, test_dict):
+    print("\nTraining {0} svm...".format(kernel)),
+    trained_svm = svm.SVC(kernel=kernel,C=C,gamma=gamma).fit(X,Y)
+    print("\nDone training {0}...".format(kernel)),
+    print("\nTesting {0}...".format(kernel)),
+    test_svm(trained_svm,test_dict, kernel)
 
 # Populating the dictionary with training data
 def generate_data_dict(data):
@@ -39,6 +46,7 @@ if __name__ == '__main__':
     script_start_time = time.time()
 
     file_names = ['poker-hand-training-true.data', 'poker-hand-testing.data']
+    #file_names = ['iris.data']
     print("Loading files...")
     if len(file_names) == 1:
         # Load all data from a file
@@ -72,25 +80,19 @@ if __name__ == '__main__':
     C = 1.0
     gamma = 0.5
 
-    print("\nTraining Linear svm...")
-    svm_linear = svm.SVC(kernel='linear',C=C,gamma=gamma).fit(X,Y)
-    print("\nLinear Test:")
-    test_svm(svm_linear,test_dict)
+    linear = threading.Thread(name='linear', target=train_svm, args=['linear', X, Y, test_dict])
+    poly = threading.Thread(name='poly', target=train_svm, args=['poly', X, Y, test_dict])
+    rbf = threading.Thread(name='rbf', target=train_svm, args=['rbf', X, Y, test_dict])
+    sigmoid = threading.Thread(name='sigmoid', target=train_svm, args=['sigmoid', X, Y, test_dict])
 
-    print("\nTraining Polynomial svm...")
-    svm_polynomial = svm.SVC(kernel='poly',C=C,gamma=gamma).fit(X,Y)
-    print("\nPolynomial Test:")
-    test_svm(svm_polynomial,test_dict)
+    threads = [linear, poly, rbf, sigmoid]
 
-    print("\nTraining RBF svm...")
-    svm_rbf = svm.SVC(kernel='rbf',C=C,gamma=gamma).fit(X,Y)
-    print("\nRBF Test:")
-    test_svm(svm_rbf,test_dict)
+    for t in threads:
+        t.start()
 
-    print("\nTraining Sigmoid svm...")
-    svm_sigmoid = svm.SVC(kernel='sigmoid',C=C,gamma=gamma).fit(X,Y)
-    print("\nSigmoid Test:")
-    test_svm(svm_sigmoid,test_dict)
+    for t in threads:
+        t.join()
+
 
     h = 0.2 #Mesh step
     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
