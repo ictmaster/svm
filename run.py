@@ -26,11 +26,17 @@ def test_svm(svm, testing_dict, name):
     print("\n{1} - Accuracy:{0:.2f}%".format(round(accuracy,2), name)),
 
 def train_svm(kernel, X,Y, test_dict):
+    time_train = time.time()
+    time_total = time.time()
     print("\nTraining {0} svm...".format(kernel)),
     trained_svm = svm.SVC(kernel=kernel,C=C,gamma=gamma).fit(X,Y)
     print("\nDone training {0}...".format(kernel)),
+    print("\n{0} training took {1:.2f} seconds...".format(kernel, round(time.time()-time_train,2))),
     print("\nTesting {0}...".format(kernel)),
+    time_test = time.time()
     test_svm(trained_svm,test_dict, kernel)
+    print("\n{0} testing took {1:.2f}".format(kernel, round(time.time()-time_test,2))),
+
 
 # Populating the dictionary with training data
 def generate_data_dict(data):
@@ -45,8 +51,8 @@ def generate_data_dict(data):
 if __name__ == '__main__':
     script_start_time = time.time()
 
-    file_names = ['poker-hand-training-true.data', 'poker-hand-testing.data']
-    #file_names = ['iris.data']
+    #file_names = ['poker-hand-training-true.data', 'poker-hand-testing.data']
+    file_names = ['iris.data']
     print("Loading files...")
     if len(file_names) == 1:
         # Load all data from a file
