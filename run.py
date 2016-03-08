@@ -101,11 +101,4 @@ if __name__ == '__main__':
     for t in threads:
         t.join()
 
-
-    h = 0.2 #Mesh step
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                         np.arange(y_min, y_max, h))
-
     print ("\nScript executed in {0} seconds...".format("%.2f"%(time.time()-script_start_time)))
