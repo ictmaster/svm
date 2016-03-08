@@ -38,18 +38,28 @@ def generate_data_dict(data):
 if __name__ == '__main__':
     script_start_time = time.time()
 
-    # Load all data from a file
-    all_data = [i.rstrip().split(',') for i in open('iris.data').readlines()]
-    random.shuffle(all_data)
-    training_ratio = 0.7
-    num_training = int(len(all_data)*training_ratio)
-    training = all_data[:num_training]
-    testing = all_data[num_training:]
-
+    file_names = ['poker-hand-training-true.data', 'poker-hand-testing.data']
+    print("Loading files...")
+    if len(file_names) == 1:
+        # Load all data from a file
+        all_data = [i.rstrip().split(',') for i in open(file_names[0]).readlines()]
+        random.shuffle(all_data)
+        training_ratio = 0.7
+        num_training = int(len(all_data)*training_ratio)
+        training = all_data[:num_training]
+        testing = all_data[num_training:]
+    elif len(file_names) == 2:
+        training = [i.rstrip().split(',') for i in open(file_names[0]).readlines()]
+        testing = [i.rstrip().split(',') for i in open(file_names[1]).readlines()]
+    else:
+        print("Wrong number of files...")
+        sys.exit(1)
     # A dictionary to store all data
+    print("Generating dictionaries...")
     train_dict = generate_data_dict(training)
     test_dict = generate_data_dict(testing)
 
+    print("Generating arrays...")
     xlist = []
     ylist = []
     for x in train_dict.iteritems():
@@ -62,27 +72,30 @@ if __name__ == '__main__':
     C = 1.0
     gamma = 0.5
 
-    print("Training Linear svm")
+    print("\nTraining Linear svm...")
     svm_linear = svm.SVC(kernel='linear',C=C,gamma=gamma).fit(X,Y)
-    print("Training Polynomial svm")
+    print("\nLinear Test:")
+    test_svm(svm_linear,test_dict)
+
+    print("\nTraining Polynomial svm...")
     svm_polynomial = svm.SVC(kernel='poly',C=C,gamma=gamma).fit(X,Y)
-    print("Training RBF svm")
+    print("\nPolynomial Test:")
+    test_svm(svm_polynomial,test_dict)
+
+    print("\nTraining RBF svm...")
     svm_rbf = svm.SVC(kernel='rbf',C=C,gamma=gamma).fit(X,Y)
-    print("Training Sigmoid svm")
+    print("\nRBF Test:")
+    test_svm(svm_rbf,test_dict)
+
+    print("\nTraining Sigmoid svm...")
     svm_sigmoid = svm.SVC(kernel='sigmoid',C=C,gamma=gamma).fit(X,Y)
+    print("\nSigmoid Test:")
+    test_svm(svm_sigmoid,test_dict)
+
     h = 0.2 #Mesh step
     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
     y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
-
-    print("\nLinear Test:")
-    test_svm(svm_linear,test_dict)
-    print("\nPolynomial Test:")
-    test_svm(svm_polynomial,test_dict)
-    print("\nRBF Test:")
-    test_svm(svm_rbf,test_dict)
-    print("\nSigmoid Test:")
-    test_svm(svm_sigmoid,test_dict)
 
     print ("\nScript executed in {0} seconds...".format("%.2f"%(time.time()-script_start_time)))
