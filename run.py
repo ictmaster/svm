@@ -3,7 +3,7 @@ import time
 import sys
 import numpy as np
 import random
-from sklearn import svm
+from sklearn import svm, grid_search
 import threading
 
 import warnings
@@ -13,29 +13,29 @@ warnings.simplefilter("ignore")
 def test_svm(svm, testing_dict, name):
     num_correct = 0
     num_wrong = 0
-    for correct, testing in testing_dict.iteritems():
+    for correct, testing in testing_dict.items():
         for test in testing:
             r = svm.predict(test)[0]
             if r == correct:
                 num_correct += 1
             else:
                 num_wrong += 1
-    print("\n{1} - Correct:{0}".format(num_correct, name)),
-    print("\n{1} - Wrong:{0}".format(num_wrong, name)),
+    print("\n{1} - Correct:{0}".format(num_correct, name), end="")
+    print("\n{1} - Wrong:{0}".format(num_wrong, name), end="")
     accuracy = float(num_correct)/(num_correct+num_wrong)*100
-    print("\n{1} - Accuracy:{0:.2f}%".format(round(accuracy,2), name)),
+    print("\n{1} - Accuracy:{0:.2f}%".format(round(accuracy,2), name), end="")
 
 def train_svm(kernel, X,Y, test_dict):
     time_train = time.time()
     time_total = time.time()
-    print("\nTraining {0} svm...".format(kernel)),
+    print("\nTraining {0} svm...".format(kernel), end="")
     trained_svm = svm.SVC(kernel=kernel,C=C,gamma=gamma).fit(X,Y)
-    print("\nDone training {0}...".format(kernel)),
-    print("\n{0} training took {1:.2f} seconds...".format(kernel, round(time.time()-time_train,2))),
-    print("\nTesting {0}...".format(kernel)),
+    print("\nDone training {0}...".format(kernel), end="")
+    print("\n{0} training took {1:.2f} seconds...".format(kernel, round(time.time()-time_train,2)), end="")
+    print("\nTesting {0}...".format(kernel), end="")
     time_test = time.time()
     test_svm(trained_svm,test_dict, kernel)
-    print("\n{0} testing took {1:.2f}".format(kernel, round(time.time()-time_test,2))),
+    print("\n{0} testing took {1:.2f}".format(kernel, round(time.time()-time_test,2)), end="")
 
 
 # Populating the dictionary with training data
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     print("Generating arrays...")
     xlist = []
     ylist = []
-    for x in train_dict.iteritems():
+    for x in train_dict.items():
         # List of lists
         xlist.extend(x[1])
         ylist.extend([x[0] for i in x[1]])
