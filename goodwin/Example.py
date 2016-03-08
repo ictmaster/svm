@@ -61,7 +61,7 @@ svm_linear = svm.SVC(kernel='linear',C=C,gamma=gamma).fit(X,Y)
 #svm_polynomial = svm.SVC(kernel='poly',C=C,gamma=gamma).fit(X,Y)
 svm_rbf = svm.SVC(kernel='rbf',C=C,gamma=gamma).fit(X,Y)
 svm_sigmoid = svm.SVC(kernel='sigmoid',C=C,gamma=gamma).fit(X,Y)
-
+import pdb;pdb.set_trace()
 h = 0.2 #Mesh step
 x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
 y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
@@ -100,6 +100,7 @@ def testSVM(svm,zero,one):
     numwrong = 0
     for correct,testing in ((0,zero),(1,one)):
         for d in testing:
+            import pdb;pdb.set_trace()
             r = svm.predict(d)[0]
             if(r==correct):
                 numcorrect += 1
